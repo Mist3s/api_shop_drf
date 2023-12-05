@@ -1,0 +1,33 @@
+version: '3'
+
+volumes:
+  sqlite3:
+  static:
+  data:
+
+services:
+  backend:
+    build: ./backend/
+    container_name: backend
+    ports:
+      - '8000:8000'
+    volumes:
+      - sqlite3:/app/data/
+      - static:/static
+      - data:/app/media
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+
+  celery:
+    build: ./backend/
+    volumes:
+      - sqlite3:/app/data/
+    command: celery -A zavarka39_shop worker -l info
+    depends_on:
+      - rabbitmq

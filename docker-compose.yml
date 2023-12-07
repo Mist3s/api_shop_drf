@@ -8,7 +8,6 @@ volumes:
 services:
   backend:
     build: ./backend/
-    container_name: backend
     ports:
       - '8000:8000'
     volumes:
@@ -31,3 +30,13 @@ services:
     command: celery -A zavarka39_shop worker -l info
     depends_on:
       - rabbitmq
+
+  flower:
+    build: ./backend/
+    command: celery -A zavarka39_shop flower
+    ports:
+      - '5555:5555'
+    depends_on:
+      - backend
+      - rabbitmq
+      - celery

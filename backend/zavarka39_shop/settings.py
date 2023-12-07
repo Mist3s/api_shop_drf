@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-la=v3tc9lpv6cua^mihmo3mdujifn9n)5vpj357k207j22xi4z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -125,7 +125,13 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+# Для локальной работы
+# CELERY_BROKER_URL = 'amqp://guest:guest@localhost'
+# CELERY_RESULT_BACKEND = 'rpc://'
+
+# Для работы в докере
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq'
+CELERY_RESULT_BACKEND = 'rpc://'
 
 CART_SESSION_ID = 'cart'
 

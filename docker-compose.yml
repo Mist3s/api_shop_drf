@@ -8,8 +8,6 @@ volumes:
 services:
   backend:
     build: ./backend/
-    ports:
-      - '8000:8000'
     volumes:
       - sqlite3:/app/data/
       - static:/static
@@ -36,6 +34,18 @@ services:
     command: celery -A zavarka39_shop flower
     ports:
       - '5555:5555'
+    depends_on:
+      - backend
+      - rabbitmq
+      - celery
+
+  gateway:
+    build: ./nginx/
+    ports:
+      - '8000:80'
+    volumes:
+      - static:/static/
+      - data:/app/media/
     depends_on:
       - backend
       - rabbitmq

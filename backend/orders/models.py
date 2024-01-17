@@ -1,9 +1,10 @@
 from django.db import models
 
-from shop.models import Product
+from shop.models import ProductPackaging
 
 
 class Order(models.Model):
+    """Модель заказа."""
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -30,13 +31,14 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+    """Позиции в заказе."""
     order = models.ForeignKey(
         Order,
         related_name='items',
         on_delete=models.CASCADE
     )
     product = models.ForeignKey(
-        Product,
+        ProductPackaging,
         related_name='order_items',
         on_delete=models.CASCADE
     )
@@ -45,7 +47,9 @@ class OrderItem(models.Model):
         decimal_places=2
 
     )
-    quantity = models.PositiveIntegerField(default=1)
+    quantity = models.PositiveIntegerField(
+        default=1
+    )
 
     class Meta:
         verbose_name = 'Позиция заказа'

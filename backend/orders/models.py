@@ -30,7 +30,7 @@ class Order(models.Model):
                   'Пример:\n'
                   'ул. Пушкина, д. 1, кв. 2'
     )
-    postal_code = models.IntegerField(
+    postal_code = models.CharField(
         max_length=6,
         verbose_name='Почтовый индекс',
         help_text='Укажите ваш почтовый индекс.\n'

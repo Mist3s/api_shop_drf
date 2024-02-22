@@ -9,13 +9,7 @@ MIN_QUANTITY_PRODUCT_AT_CART = 1
 
 
 class Cart(models.Model):
-    """
-    Model Cart
-        id -> PK
-        user -> User
-        product -> ProductPackaging
-        quantity -> Quantity
-    """
+    """Модель корзины."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

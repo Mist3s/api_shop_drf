@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from .models import (
-    Category, Product, Packaging,
+    Category, Product, Packing,
     ProductPackaging, ProductImage
 )
 
@@ -45,7 +45,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline, PackagingInline]
 
 
-@admin.register(Packaging)
+@admin.register(Packing)
 class PackagingAdmin(admin.ModelAdmin):
     list_display = ['name', 'weight']
 

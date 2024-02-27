@@ -1,5 +1,9 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
+
+MIN_WEIGHT_PACKING = 1
+MAX_WEIGHT_PACKING = 99999
 
 
 class PublishedBaseModel(models.Model):
@@ -88,7 +92,7 @@ class Product(PublishedBaseModel):
         help_text='Добавьте описание к товару'
     )
     packaging = models.ManyToManyField(
-        'Packaging',
+        'Packing',
         through='ProductPackaging',
         related_name='product',
         verbose_name='Упаковка',
@@ -146,7 +150,7 @@ class ProductImage(models.Model):
         return str(self.pk)
 
 
-class Packaging(models.Model):
+class Packing(models.Model):
     """Модель упаковки"""
     name = models.CharField(
         max_length=200,
@@ -154,9 +158,15 @@ class Packaging(models.Model):
         verbose_name='Название',
         help_text='Укажите название',
     )
-    weight = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
+    weight = models.IntegerField(
+        validators=[
+            MinValueValidator(
+                limit_value=MIN_WEIGHT_PACKING,
+            ),
+            MaxValueValidator(
+                limit_value=MAX_WEIGHT_PACKING
+            )
+        ],
         verbose_name='Вес',
         help_text='Вес упаковки в граммах'
     )
@@ -179,7 +189,7 @@ class ProductPackaging(PublishedBaseModel):
         help_text='Укажите продукт'
     )
     packaging = models.ForeignKey(
-        Packaging,
+        Packing,
         on_delete=models.CASCADE,
         related_name='product_packaging',
         verbose_name='Упаковка',

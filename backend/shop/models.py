@@ -30,6 +30,7 @@ class Category(PublishedBaseModel):
     """Модель категории."""
     name = models.CharField(
         max_length=200,
+        unique=True,
         verbose_name='Название',
         help_text='Укажите название категорию',
     )
@@ -37,7 +38,8 @@ class Category(PublishedBaseModel):
         max_length=200,
         unique=True,
         verbose_name='Slug',
-        help_text='Укажите slug категории'
+        help_text='Укажите slug категории',
+        primary_key=True
     )
 
     class Meta:
@@ -59,7 +61,7 @@ class Category(PublishedBaseModel):
 
 
 class Product(PublishedBaseModel):
-    """Модель продукта"""
+    """Модель продукта."""
     category = models.ForeignKey(
         Category,
         related_name='products',
@@ -69,11 +71,13 @@ class Product(PublishedBaseModel):
     )
     name = models.CharField(
         max_length=200,
+        unique=True,
         verbose_name='Название',
         help_text='Укажите название товара'
     )
-    slug = models.CharField(
+    slug = models.SlugField(
         max_length=200,
+        unique=True,
         verbose_name='Slug',
         help_text='Укажите slug товара',
     )
@@ -112,6 +116,10 @@ class Product(PublishedBaseModel):
 
 class ProductImage(models.Model):
     """Модель изображений продуктов."""
+    preview = models.BooleanField(
+        default=False,
+        verbose_name='Превью'
+    )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
@@ -129,6 +137,10 @@ class ProductImage(models.Model):
     class Meta:
         verbose_name = 'Изображение продукта'
         verbose_name_plural = 'Изображения продукта'
+        constraints = [models.UniqueConstraint(
+            fields=['product', 'preview'],
+            name='one_product_one_preview'
+        )]
 
     def __str__(self):
         return str(self.pk)
@@ -138,6 +150,7 @@ class Packaging(models.Model):
     """Модель упаковки"""
     name = models.CharField(
         max_length=200,
+        unique=True,
         verbose_name='Название',
         help_text='Укажите название',
     )
@@ -176,7 +189,7 @@ class ProductPackaging(PublishedBaseModel):
         max_digits=10,
         decimal_places=2,
         verbose_name='Цена',
-        help_text='Цена этой упаковки за 1 шт.'
+        help_text='Цена упаковки за шт.'
     )
 
     class Meta:

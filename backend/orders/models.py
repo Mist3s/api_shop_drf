@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from shop.models import ProductPackaging
+from shop.models import ProductPacking
 
 MAX_QUANTITY_PRODUCT_AT_ORDER = 1000
 MIN_QUANTITY_PRODUCT_AT_ORDER = 1
@@ -80,7 +80,7 @@ class OrderItem(models.Model):
         verbose_name='Заказ'
     )
     product = models.ForeignKey(
-        ProductPackaging,
+        ProductPacking,
         related_name='order_items',
         on_delete=models.CASCADE,
         verbose_name='Продукт'

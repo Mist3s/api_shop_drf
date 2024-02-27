@@ -91,9 +91,9 @@ class Product(PublishedBaseModel):
         verbose_name="Описание товара",
         help_text='Добавьте описание к товару'
     )
-    packaging = models.ManyToManyField(
+    packing = models.ManyToManyField(
         'Packing',
-        through='ProductPackaging',
+        through='ProductPacking',
         related_name='product',
         verbose_name='Упаковка',
     )
@@ -179,19 +179,19 @@ class Packing(models.Model):
         return self.name
 
 
-class ProductPackaging(PublishedBaseModel):
+class ProductPacking(PublishedBaseModel):
     """Вспомогательная модель: Продукт - Упаковка."""
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name='product_packaging',
+        related_name='product_packing',
         verbose_name='Продукт',
         help_text='Укажите продукт'
     )
-    packaging = models.ForeignKey(
+    packing = models.ForeignKey(
         Packing,
         on_delete=models.CASCADE,
-        related_name='product_packaging',
+        related_name='product_packing',
         verbose_name='Упаковка',
         help_text='Укажите упаковку'
     )
@@ -206,6 +206,6 @@ class ProductPackaging(PublishedBaseModel):
         verbose_name = 'Продукт - Упаковка'
         verbose_name_plural = verbose_name
         constraints = [models.UniqueConstraint(
-            fields=['product', 'packaging'],
-            name='unique_product_packaging'
+            fields=['product', 'packing'],
+            name='unique_product_packing'
         )]

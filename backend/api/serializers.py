@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from shop.models import (
     Category, Product, ProductImage,
-    Packing, ProductPackaging
+    Packing, ProductPacking
 )
 
 
@@ -12,12 +12,12 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name', 'slug')
 
 
-class PackagingSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source='packaging.name')
-    weight = serializers.FloatField(source='packaging.weight')
+class PackingSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='packing.name')
+    weight = serializers.FloatField(source='packing.weight')
 
     class Meta:
-        model = ProductPackaging
+        model = ProductPacking
         fields = (
             'name',
             'weight',
@@ -32,8 +32,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    packaging = PackagingSerializer(
-        source='product_packaging',
+    packaging = PackingSerializer(
+        source='product_packing',
         many=True
     )
     images = ProductImageSerializer(
@@ -49,7 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'slug',
             'category',
             'description',
-            'packaging',
+            'packing',
             'created',
             'updated',
             'images'

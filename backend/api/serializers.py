@@ -10,16 +10,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PackagingSerializer(serializers.ModelSerializer):
-    # name = serializers.CharField(source='product_packaging.name')
-    # weight = serializers.FloatField(source='product_packaging.weight')
-    # price = serializers.FloatField(source='product_packaging.price')
+    name = serializers.CharField(source='packaging.name')
+    weight = serializers.FloatField(source='packaging.weight')
 
     class Meta:
-        model = Packaging
+        model = ProductPackaging
         fields = (
             'name',
             'weight',
-            # 'price'
+            'price',
         )
 
 
@@ -31,6 +30,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     packaging = PackagingSerializer(
+        source='product_packaging',
         many=True
     )
     images = ProductImageSerializer(

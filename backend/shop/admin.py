@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 
 from .models import (
     Category, Product, Packing,
-    ProductPackaging, ProductImage
+    ProductPacking, ProductImage
 )
 
 
@@ -13,7 +13,7 @@ class ProductImageInline(admin.TabularInline):
 
 
 class PackagingInline(admin.TabularInline):
-    model = ProductPackaging
+    model = ProductPacking
     extra = 3  # Количество дополнительных полей для добавления упаковки
 
 

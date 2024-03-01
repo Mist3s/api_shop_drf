@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from shop.models import ProductPackaging
+from shop.models import ProductPacking
 from users.models import User
 
 MAX_QUANTITY_PRODUCT_AT_CART = 1000
@@ -17,7 +17,7 @@ class Cart(models.Model):
         help_text="Пользователь которому принадлежит корзина."
     )
     product = models.ForeignKey(
-        ProductPackaging,
+        ProductPacking,
         on_delete=models.CASCADE,
         related_name='product_cart',
         verbose_name='Продукт',

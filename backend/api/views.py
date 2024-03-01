@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
@@ -14,6 +13,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """Вьюсет для модели продуктов"""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (AllowAny,)

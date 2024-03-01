@@ -32,7 +32,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    packaging = PackingSerializer(
+    packing = PackingSerializer(
         source='product_packing',
         many=True
     )

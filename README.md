@@ -1,6 +1,6 @@
 # Zavarka39 - Интернет магазин китайского чая
 
-Добро пожаловать в Zavarka39 - ваш источник качественного китайского чая. Этот проект представляет собой интернет-магазин, разработанный с использованием технологий Docker, Django, Gunicorn, Celery, Pillow и Flower.
+Это мой Pet-проект разрабатываемый с целью закрепления и отработки полученных знаний и навыков, в планах написать REST API на базе Django Rest Framework.
 
 ## Требования
 
@@ -12,13 +12,13 @@
 1. Клонируйте репозиторий:
 
     ```bash
-    git clone https://github.com/mist3s/django_shop_v2.git
+    git clone https://github.com/mist3s/api_shop_drf.git
     ```
 
 2. Перейдите в каталог проекта:
 
     ```bash
-    cd django_shop_v2
+    cd api_shop_drf%0текука
     ```
 
 3. Запустите контейнеры с помощью Docker Compose:
@@ -49,6 +49,7 @@
 
 - Docker
 - Django 4.2.7
+- djangorestframework 3.14.0
 - Gunicorn 20.1.0
 - Celery 5.3.1
 - Pillow 10.1.0
@@ -56,4 +57,4 @@
 
 ## Автор
 
-Андрей Иванов
+Python-разработчик [Андрей Иванов](https://github.com/Mist3s)

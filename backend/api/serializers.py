@@ -21,13 +21,19 @@ class Base64ImageField(serializers.ImageField):
         return super().to_internal_value(data)
 
 
+class PackingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Packing
+        fields = ('name', 'weight')
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('name', 'slug')
 
 
-class PackingSerializer(serializers.ModelSerializer):
+class ProductPackingSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='packing.name')
     weight = serializers.FloatField(source='packing.weight')
 
@@ -49,7 +55,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    packing = PackingSerializer(
+    packing = ProductPackingSerializer(
         source='product_packing',
         many=True
     )

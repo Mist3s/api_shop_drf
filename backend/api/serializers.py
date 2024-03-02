@@ -24,7 +24,7 @@ class Base64ImageField(serializers.ImageField):
 class PackingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Packing
-        fields = ('name', 'weight')
+        fields = ('id', 'name', 'weight')
 
 
 class CategorySerializer(serializers.ModelSerializer):

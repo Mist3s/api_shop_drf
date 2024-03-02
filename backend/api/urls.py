@@ -1,10 +1,15 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import CategoryViewSet, ProductViewSet
+from .views import CategoryViewSet, ProductViewSet, PackingViewSet
 
 v1_router = routers.DefaultRouter()
 
+v1_router.register(
+    'packing',
+    PackingViewSet,
+    basename='packing'
+)
 v1_router.register(
     'categories',
     CategoryViewSet,

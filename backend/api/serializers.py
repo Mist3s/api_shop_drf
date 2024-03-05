@@ -135,7 +135,7 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
     def update(self, product, validated_data):
-        """Обновление рецепта"""
+        """Обновление продукта."""
         if (not validated_data.get('packing')
                 or not validated_data.get('images')):
             raise serializers.ValidationError(

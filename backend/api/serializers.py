@@ -35,7 +35,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductPackingSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='packing.name')
-    weight = serializers.FloatField(source='packing.weight')
+    weight = serializers.IntegerField(source='packing.weight')
 
     class Meta:
         model = ProductPacking

@@ -22,6 +22,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class PackingSerializer(serializers.ModelSerializer):
+    """Сериализатор упаковки."""
     class Meta:
         model = Packing
         fields = ('id', 'name', 'weight')
@@ -34,6 +35,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductPackingSerializer(serializers.ModelSerializer):
+    """Сериализатор упаковки в продукте для вывода данных."""
     name = serializers.CharField(source='packing.name')
     weight = serializers.IntegerField(source='packing.weight')
 
@@ -47,6 +49,7 @@ class ProductPackingSerializer(serializers.ModelSerializer):
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    """Сериализатор изображения."""
     image = Base64ImageField()
 
     class Meta:
@@ -55,6 +58,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class PackingAmountSerializer(serializers.ModelSerializer):
+    """Сериализатор упаковки в продукте для ввода данных."""
     id = serializers.IntegerField(write_only=True)
     price = serializers.FloatField(write_only=True)
 
@@ -64,6 +68,7 @@ class PackingAmountSerializer(serializers.ModelSerializer):
 
 
 class ProductGetSerializer(serializers.ModelSerializer):
+    """Сериализатор продукта для вывода данных."""
     packing = ProductPackingSerializer(
         source='product_packing',
         many=True
@@ -89,6 +94,7 @@ class ProductGetSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    """Сериализатор продукта для ввода данных."""
     packing = PackingAmountSerializer(many=True)
     images = ProductImageSerializer(many=True)
 

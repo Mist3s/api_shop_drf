@@ -54,7 +54,16 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ('id', 'image', 'preview')
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class PackingAmountSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(write_only=True)
+    price = serializers.FloatField(write_only=True)
+
+    class Meta:
+        model = ProductPacking
+        fields = ('id', 'price')
+
+
+class ProductGetSerializer(serializers.ModelSerializer):
     packing = ProductPackingSerializer(
         source='product_packing',
         many=True
@@ -77,3 +86,69 @@ class ProductSerializer(serializers.ModelSerializer):
             'updated',
             'images'
         )
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    packing = PackingAmountSerializer(many=True)
+    images = ProductImageSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = ('id', 'category', 'images', 'packing', 'slug', 'name', 'description')
+
+    def to_representation(self, instance):
+        """Переопределение сериализатора для выходных данных."""
+        return ProductGetSerializer(
+            instance, context=self.context
+        ).data
+
+    def create_and_update_objects(self, product, packaging, images):
+        images_list = []
+        for image in images:
+            new_images = ProductImage(
+                product=product,
+                image=image['image'],
+                preview=image['preview'],
+            )
+            images_list.append(new_images)
+        packaging_list = []
+        for packing in packaging:
+            new_packaging = ProductPacking(
+                product=product,
+                packing_id=packing['id'],
+                price=packing['price'],
+            )
+            packaging_list.append(new_packaging)
+        ProductPacking.objects.bulk_create(packaging_list)
+        ProductImage.objects.bulk_create(images_list)
+        return product
+
+    def create(self, validated_data):
+        """Создание продукта."""
+        packaging = validated_data.pop('packing')
+        images = validated_data.pop('images')
+        product = Product.objects.create(**validated_data)
+        return self.create_and_update_objects(
+            product=product,
+            packaging=packaging,
+            images=images
+        )
+
+    def update(self, product, validated_data):
+        """Обновление рецепта"""
+        if (not validated_data.get('packing')
+                or not validated_data.get('images')):
+            raise serializers.ValidationError(
+                'Не все обязательные поля заполнены.'
+            )
+        product.packing.clear()
+        product.product_images.all().delete()
+        packaging = validated_data.pop('packing')
+        images = validated_data.pop('images')
+        product = super().update(product, validated_data)
+        return self.create_and_update_objects(
+            product=product,
+            packaging=packaging,
+            images=images
+        )
+

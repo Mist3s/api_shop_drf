@@ -100,7 +100,7 @@ class Product(PublishedBaseModel):
     class Meta:
         ordering = ['name']
         indexes = [
-            models.Index(fields=['id', 'slug']),
+            models.Index(fields=['slug']),
             models.Index(fields=['name']),
             models.Index(fields=['-created'])
         ]

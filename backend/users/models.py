@@ -9,7 +9,7 @@ REGEX_ME = RegexValidator(r'[^m][^e]', 'Имя пользователя не м�
 class User(AbstractUser):
     """Модель пользователей."""
     username = models.CharField(
-        unique=True,
+        primary_key=True,
         max_length=150,
         validators=(REGEX_SIGNS, REGEX_ME),
         verbose_name='Никнейм пользователя',

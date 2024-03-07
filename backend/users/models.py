@@ -31,11 +31,16 @@ class User(AbstractUser):
         verbose_name='Фамилия пользователя',
         help_text='Укажите фамилия пользователя'
     )
+    registered = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата регистрации',
+        blank=False
+    )
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
     USERNAME_FIELD = 'email'
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('-registered',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 

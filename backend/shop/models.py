@@ -80,8 +80,8 @@ class Product(PublishedBaseModel):
         help_text='Укажите название товара'
     )
     slug = models.SlugField(
+        primary_key=True,
         max_length=200,
-        unique=True,
         verbose_name='Slug',
         help_text='Укажите slug товара',
     )

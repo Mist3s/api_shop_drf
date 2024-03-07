@@ -40,7 +40,6 @@ class Category(PublishedBaseModel):
     )
     slug = models.SlugField(
         max_length=200,
-        unique=True,
         verbose_name='Slug',
         help_text='Укажите slug категории',
         primary_key=True

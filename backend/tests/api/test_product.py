@@ -19,19 +19,24 @@ def test_add_product(auth_client, product_data):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'method, expected_status, data',
+    'method, expected_status, data, detail',
     (
-        ('post', status.HTTP_405_METHOD_NOT_ALLOWED, pytest.lazy_fixture('category_data')),
-        ('get', status.HTTP_200_OK, None)
+        ('post', status.HTTP_405_METHOD_NOT_ALLOWED, pytest.lazy_fixture('category_data'), False),
+        ('get', status.HTTP_200_OK, None, False),
+        ('get', status.HTTP_200_OK, None, True),
+        ('put', status.HTTP_405_METHOD_NOT_ALLOWED, pytest.lazy_fixture('category_data'), True),
+        ('patch', status.HTTP_405_METHOD_NOT_ALLOWED, pytest.lazy_fixture('category_data'), True),
+        ('delete', status.HTTP_405_METHOD_NOT_ALLOWED, None, True)
     ),
 )
-def test_add_category_and_list(method, auth_client, expected_status, data, create_category):
-    response = getattr(auth_client, method)(
-        '/api/categories/', data
-    )
+def test_category(method, auth_client, expected_status, data, create_category, detail):
+    url = '/api/categories/'
+    if detail:
+        url += f'{create_category.slug}/'
+    response = getattr(auth_client, method)('/api/categories/', data)
     assert response.status_code == expected_status
     if response.request.get('REQUEST_METHOD') == 'GET':
         assert isinstance(response.data, list)
-        assert response.data[0]['slug'] == create_category.slug
-        assert response.data[0]['name'] == create_category.name
+        assert response.data[0].get('slug') == create_category.slug
+        assert response.data[0].get('name') == create_category.name
 

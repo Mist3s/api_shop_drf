@@ -11,6 +11,11 @@ def test_add_product(auth_client, product_data):
     assert response.data.get('category') == product_data.get('category'), 'Missing field "category".'
     assert response.data.get('description') == product_data.get('description'), 'Missing field "description".'
     assert response.data.get('packing'), 'Missing field "packing".'
+    for packing in response.data.get('packing'):
+        assert packing.get('weight'), 'Missing field "weight" for "packing".'
+        assert (packing.get('price') == product_data.get('packing')[0].get('price'),
+                'Missing field "price" for "packing".')
+        assert packing.get('name'), 'Missing field "name" for "packing".'
     assert response.data.get('images'), 'Missing field "images".'
     assert response.data.get('created'), 'Missing field "created".'
     assert response.data.get('updated'), 'Missing field "updated".'

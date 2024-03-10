@@ -6,8 +6,11 @@ from rest_framework import status
 def test_register_user(user, client):
     response = client.post('/api/users/', user)
     assert response.status_code == status.HTTP_201_CREATED
-    data = response.data
-    assert data['username'] == user['username']
+    assert response.data.get('first_name')
+    assert response.data.get('last_name')
+    assert response.data.get('username')
+    assert response.data.get('email')
+    assert response.data['username'] == user['username']
 
 
 @pytest.mark.django_db

@@ -5,15 +5,15 @@ from rest_framework import status
 @pytest.mark.django_db
 def test_add_product(auth_client, product_data):
     response = auth_client.post('/api/products/', product_data, format='json')
-    assert response.status_code == status.HTTP_201_CREATED
-    assert response.data.get('id') == product_data.get('id'), 'Missing field "id"'
-    assert response.data.get('name') == product_data.get('name'), 'Missing field "name"'
-    assert response.data.get('category') == product_data.get('category'), 'Missing field "category"'
-    assert response.data.get('description') == product_data.get('description'), 'Missing field "description"'
-    assert response.data.get('packing'), 'Missing field "packing"'
-    assert response.data.get('images'), 'Missing field "images"'
-    assert response.data.get('created'), 'Missing field "created"'
-    assert response.data.get('updated'), 'Missing field "updated"'
+    assert response.status_code == status.HTTP_201_CREATED, 'Expected status code 201.'
+    assert response.data.get('id') == product_data.get('id'), 'Missing field "id".'
+    assert response.data.get('name') == product_data.get('name'), 'Missing field "name".'
+    assert response.data.get('category') == product_data.get('category'), 'Missing field "category".'
+    assert response.data.get('description') == product_data.get('description'), 'Missing field "description".'
+    assert response.data.get('packing'), 'Missing field "packing".'
+    assert response.data.get('images'), 'Missing field "images".'
+    assert response.data.get('created'), 'Missing field "created".'
+    assert response.data.get('updated'), 'Missing field "updated".'
 
 
 @pytest.mark.django_db
@@ -38,7 +38,7 @@ def test_category(method, auth_client, expected_status, data, create_category, d
     response = getattr(auth_client, method)('/api/categories/', data)
     assert response.status_code == expected_status, text
     if response.request.get('REQUEST_METHOD') == 'GET':
-        assert isinstance(response.data, list)
-        assert response.data[0].get('slug') == create_category.slug, 'Missing field "slug"'
-        assert response.data[0].get('name') == create_category.name, 'Missing field "name"'
+        assert isinstance(response.data, list), 'Expected list.'
+        assert response.data[0].get('slug') == create_category.slug, 'Missing field "slug".'
+        assert response.data[0].get('name') == create_category.name, 'Missing field "name".'
 

@@ -100,7 +100,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'category', 'images', 'packing', 'slug', 'name', 'description')
+        fields = ('slug', 'name', 'category', 'description', 'images', 'packing',)
 
     def to_representation(self, instance):
         """Переопределение сериализатора для выходных данных."""

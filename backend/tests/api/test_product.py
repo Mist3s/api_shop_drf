@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 from rest_framework import status
 
@@ -9,12 +11,17 @@ def test_add_product(auth_client, product_data):
     assert response.data.get('id') == product_data.get('id'), 'Missing field "id".'
     assert response.data.get('name') == product_data.get('name'), 'Missing field "name".'
     assert response.data.get('category') == product_data.get('category'), 'Missing field "category".'
-    assert response.data.get('description') == product_data.get('description'), 'Missing field "description".'
+    assert (response.data.get('description')
+            == product_data.get('description'), 'Missing field "description".')
     assert response.data.get('packing'), 'Missing field "packing".'
     for packing in response.data.get('packing'):
+        print(packing)
         assert packing.get('weight'), 'Missing field "weight" for "packing".'
+        assert isinstance(packing.get('weight'), int), 'The field must be integer.'
         assert (packing.get('price') == product_data.get('packing')[0].get('price'),
                 'Missing field "price" for "packing".')
+        assert (isinstance(Decimal(packing.get('price')), Decimal),
+                'The data in the field cannot be converted Decimal.')
         assert packing.get('name'), 'Missing field "name" for "packing".'
     assert response.data.get('images'), 'Missing field "images".'
     assert response.data.get('created'), 'Missing field "created".'

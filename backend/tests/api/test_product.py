@@ -24,6 +24,9 @@ def test_add_product(auth_client, product_data):
                 'The data in the field cannot be converted Decimal.')
         assert packing.get('name'), 'Missing field "name" for "packing".'
     assert response.data.get('images'), 'Missing field "images".'
+    for image in response.data.get('images'):
+        assert image.get('image'), 'Missing field "image" for "image".'
+        assert image.get('preview'), 'Missing field "preview" for "image".'
     assert response.data.get('created'), 'Missing field "created".'
     assert response.data.get('updated'), 'Missing field "updated".'
 

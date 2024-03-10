@@ -4,7 +4,6 @@ from rest_framework.test import APIClient
 from shop.models import Packing, Category
 
 
-
 @pytest.fixture
 def user_data():
     return dict(

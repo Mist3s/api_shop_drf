@@ -7,6 +7,7 @@ from rest_framework import status
 
 from .serializers import CategorySerializer, ProductSerializer, PackingSerializer, ProductGetSerializer
 from shop.models import Category, Product, Packing
+from .permissions import IsAdminOrReadOnly
 
 
 @extend_schema_view(
@@ -132,4 +133,4 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminOrReadOnly,)

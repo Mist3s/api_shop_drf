@@ -30,6 +30,15 @@ def test_add_product_auth_superuser_client(auth_superuser_client, product_data):
     assert response.data.get('updated'), 'Missing field "updated".'
 
 
+@pytest.mark.parametrize(
+    'client',
+    (pytest.lazy_fixture('no_auth_client'), pytest.lazy_fixture('auth_client')),
+)
+def test_add_product_auth_client(client, product_data):
+    response = client.post('/api/products/', product_data, format='json')
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED, 'Only available superuser.'
+
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'method, expected_status, data, detail, text',

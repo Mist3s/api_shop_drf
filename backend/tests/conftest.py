@@ -94,8 +94,8 @@ def client():
 
 @pytest.fixture
 def user(client, user_data):
-    response = client.post('/api/users/', user_data)
-    return response
+    user = User.objects.create(**user_data)
+    return user
 
 
 @pytest.fixture

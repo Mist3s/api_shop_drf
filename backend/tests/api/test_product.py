@@ -15,7 +15,6 @@ def test_add_product_auth_client(auth_client, product_data):
             == product_data.get('description'), 'Missing field "description".')
     assert response.data.get('packing'), 'Missing field "packing".'
     for packing in response.data.get('packing'):
-        print(packing)
         assert packing.get('weight'), 'Missing field "weight" for "packing".'
         assert isinstance(packing.get('weight'), int), 'The field must be integer.'
         assert (packing.get('price') == product_data.get('packing')[0].get('price'),

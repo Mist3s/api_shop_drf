@@ -88,12 +88,12 @@ def product_data(image_data, create_packing, create_category):
 
 
 @pytest.fixture
-def client():
+def no_auth_client():
     return APIClient()
 
 
 @pytest.fixture
-def user(client, user_data):
+def user(no_auth_client, user_data):
     user = User.objects.create(**user_data)
     return user
 
@@ -105,14 +105,14 @@ def superuser(superuser_data):
 
 
 @pytest.fixture
-def auth_client(client, user):
+def auth_client(no_auth_client, user):
     token = generate_token(user)
-    client.credentials(Authorization=f'Token {token}')
-    return client
+    no_auth_client.credentials(Authorization=f'Token {token}')
+    return no_auth_client
 
 
 @pytest.fixture
-def auth_superuser_client(client, superuser):
+def auth_superuser_client(no_auth_client, superuser):
     token = generate_token(superuser)
-    client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
-    return client
+    no_auth_client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+    return no_auth_client

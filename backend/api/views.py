@@ -1,9 +1,11 @@
+from decimal import Decimal
+
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
-from .serializers import CategorySerializer, ProductSerializer, PackingSerializer
+from .serializers import CategorySerializer, ProductSerializer, PackingSerializer, ProductGetSerializer
 from shop.models import Category, Product, Packing
 
 
@@ -91,8 +93,43 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (AllowAny,)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Получить список продуктов",
+        description="Страница доступна всем пользователям.",
+        responses={
+            status.HTTP_200_OK: ProductGetSerializer
+        }
+    ),
+    create=extend_schema(
+        summary="Добавить продукт",
+        description="Страница доступна администратору.",
+        responses={
+            status.HTTP_201_CREATED: ProductGetSerializer
+        }
+    ),
+    retrieve=extend_schema(
+        summary="Получить продукт",
+        description="Страница доступна всем пользователям.",
+        responses={
+            status.HTTP_200_OK: ProductGetSerializer
+        }
+    ),
+    partial_update=extend_schema(
+        summary="Обновить продукт",
+        description="Страница доступна администратору.",
+        responses={
+            status.HTTP_200_OK: ProductGetSerializer
+        }
+    ),
+    destroy=extend_schema(
+        summary="Удалить продукт",
+        description="Страница доступна администратору."
+    )
+)
 class ProductViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели продуктов"""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (AllowAny,)

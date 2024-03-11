@@ -10,19 +10,32 @@ from shop.models import Category, Product, Packing
 @extend_schema_view(
     list=extend_schema(
         summary="Получить список упаковок",
-        description="Страница доступна всем пользователям."
+        description="Страница доступна всем пользователям.",
+        examples=[
+            OpenApiExample(
+                "Packing example",
+                description="Test example for the list packing",
+                value=
+                {
+                    "id": 0,
+                    "name": "Test packing",
+                    "weight": 1
+                },
+                status_codes=[str(status.HTTP_200_OK)],
+            ),
+        ],
     ),
     retrieve=extend_schema(
         summary="Детальная информация упаковки",
         description="Страница доступна всем пользователям.",
         examples=[
             OpenApiExample(
-                "Post example",
-                description="Test example for the post",
+                "Packing example",
+                description="Test example for the packing",
                 value=
                 {
-                    "name": "Test category",
-                    "slug": "test-category",
+                    "id": 0,
+                    "name": "Test packing",
                     "weight": 1
                 },
                 status_codes=[str(status.HTTP_200_OK)],
@@ -37,6 +50,40 @@ class PackingViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (AllowAny,)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Получить список категорий",
+        description="Страница доступна всем пользователям.",
+        examples=[
+            OpenApiExample(
+                "Category example",
+                description="Test example for the list category",
+                value=
+                {
+                    "name": "Test category",
+                    "slug": "test-category"
+                },
+                status_codes=[str(status.HTTP_200_OK)],
+            ),
+        ],
+    ),
+    retrieve=extend_schema(
+        summary="Детальная информация категории",
+        description="Страница доступна всем пользователям.",
+        examples=[
+            OpenApiExample(
+                "Category example",
+                description="Test example for the category",
+                value=
+                {
+                    "name": "Test category",
+                    "slug": "test-category"
+                },
+                status_codes=[str(status.HTTP_200_OK)],
+            ),
+        ],
+    ),
+)
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет для модели категории."""
     queryset = Category.objects.all()

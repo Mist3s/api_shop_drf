@@ -5,8 +5,9 @@ from rest_framework import status
 
 
 @pytest.mark.django_db
-def test_add_product_auth_client(auth_client, product_data):
-    response = auth_client.post('/api/products/', product_data, format='json')
+def test_add_product_auth_superuser_client(auth_superuser_client, product_data):
+    print(auth_superuser_client)
+    response = auth_superuser_client.post('/api/products/', product_data, format='json')
     assert response.status_code == status.HTTP_201_CREATED, 'Expected status code 201.'
     assert response.data.get('id') == product_data.get('id'), 'Missing field "id".'
     assert response.data.get('name') == product_data.get('name'), 'Missing field "name".'

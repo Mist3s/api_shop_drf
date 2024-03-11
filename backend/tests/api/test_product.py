@@ -30,6 +30,7 @@ def test_add_product_auth_superuser_client(auth_superuser_client, product_data):
     assert response.data.get('updated'), 'Missing field "updated".'
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     'client',
     (pytest.lazy_fixture('no_auth_client'), pytest.lazy_fixture('auth_client')),

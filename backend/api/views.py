@@ -1,11 +1,10 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework import status
 
 from .serializers import CategorySerializer, ProductSerializer, PackingSerializer, ProductGetSerializer
 from shop.models import Category, Product, Packing
-from .permissions import IsAdminOrReadOnly
 
 
 @extend_schema_view(
@@ -131,4 +130,4 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAdminUser)

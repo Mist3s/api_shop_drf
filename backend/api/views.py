@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny

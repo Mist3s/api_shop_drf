@@ -54,6 +54,10 @@
 - Celery 5.3.1
 - Pillow 10.1.0
 - Flower 2.0.1
+- pytest 6.2.4
+- pytest-django 4.4.0
+- pytest-lazy-fixture 0.6.3
+- drf-spectacular 0.27.1
 
 ## Автор
 

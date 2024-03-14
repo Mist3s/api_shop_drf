@@ -66,3 +66,19 @@ def test_category(method, auth_client, expected_status, data, create_category, d
         assert response.data[0].get('slug') == create_category.slug, 'Missing field "slug".'
         assert response.data[0].get('name') == create_category.name, 'Missing field "name".'
 
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'client',
+    (
+            pytest.lazy_fixture('no_auth_client'),
+            pytest.lazy_fixture('auth_client'),
+            pytest.lazy_fixture('auth_superuser_client')
+    ),
+)
+def test_packing_get_list(client, create_packing):
+    url = '/api/packing/'
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+    assert isinstance(response.data, list)
+    assert len(response.data) == 1

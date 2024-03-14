@@ -82,3 +82,25 @@ def test_packing_get_list(client, create_packing):
     assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.data, list)
     assert len(response.data) == 1
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'client',
+    (
+            pytest.lazy_fixture('no_auth_client'),
+            pytest.lazy_fixture('auth_client'),
+            pytest.lazy_fixture('auth_superuser_client')
+    ),
+)
+def test_packing_get_detail(client, create_packing):
+    url = f'/api/packing/{create_packing.pk}/'
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+    assert isinstance(response.data, dict)
+    assert response.data.get('name') == create_packing.name
+    assert response.data.get('id') == create_packing.id
+    assert response.data.get('weight') == create_packing.weight
+    assert type(response.data.get('weight')) == int
+    assert type(response.data.get('id')) == int
+    assert type(response.data.get('name')) == str

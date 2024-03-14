@@ -104,3 +104,36 @@ def test_packing_get_detail(client, create_packing):
     assert type(response.data.get('weight')) == int
     assert type(response.data.get('id')) == int
     assert type(response.data.get('name')) == str
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'method, expected_status, data, detail',
+    (
+        ('post', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('packing_data'), False),
+        ('put', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('packing_data'), True),
+        ('patch', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('packing_data'), True),
+        ('delete', status.HTTP_405_METHOD_NOT_ALLOWED,
+         None, True)
+    )
+)
+@pytest.mark.parametrize(
+    'client',
+    (
+            pytest.lazy_fixture('no_auth_client'),
+            pytest.lazy_fixture('auth_client'),
+            pytest.lazy_fixture('auth_superuser_client')
+    ),
+)
+def test_packing_method_not_available(
+        client, method, expected_status, data, detail, create_packing
+):
+    url = f'/api/packing/'
+    if detail:
+        url += f'{create_packing.pk}/'
+    response = getattr(client, method)(url, data, format='json')
+    assert response.status_code == expected_status
+

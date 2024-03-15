@@ -100,8 +100,7 @@ def user(no_auth_client, user_data):
 
 @pytest.fixture
 def superuser(superuser_data):
-    user = User.objects.create(**superuser_data)
-    return user
+    return User.objects.create(**superuser_data)
 
 
 @pytest.fixture

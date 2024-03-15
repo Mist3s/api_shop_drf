@@ -15,11 +15,10 @@ from shop.models import Category, Product, Packing
             OpenApiExample(
                 "Packing example",
                 description="Test example for the list packing",
-                value=
-                {
-                    "id": 0,
-                    "name": "Test packing",
-                    "weight": 1
+                value={
+                        "id": 0,
+                        "name": "Test packing",
+                        "weight": 1
                 },
                 status_codes=[str(status.HTTP_200_OK)],
             ),
@@ -32,8 +31,7 @@ from shop.models import Category, Product, Packing
             OpenApiExample(
                 "Packing example",
                 description="Test example for the packing",
-                value=
-                {
+                value={
                     "id": 0,
                     "name": "Test packing",
                     "weight": 1
@@ -58,8 +56,7 @@ class PackingViewSet(viewsets.ReadOnlyModelViewSet):
             OpenApiExample(
                 "Category example",
                 description="Test example for the list category",
-                value=
-                {
+                value={
                     "name": "Test category",
                     "slug": "test-category"
                 },
@@ -74,8 +71,7 @@ class PackingViewSet(viewsets.ReadOnlyModelViewSet):
             OpenApiExample(
                 "Category example",
                 description="Test example for the category",
-                value=
-                {
+                value={
                     "name": "Test category",
                     "slug": "test-category"
                 },

@@ -67,9 +67,6 @@ class Order(models.Model):
     def __str__(self):
         return f'Заказ #{self.pk}'
 
-    def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.id.all())
-
 
 class OrderItem(models.Model):
     """Позиция в заказе."""
@@ -113,6 +110,3 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return str(self.pk)
-
-    def get_cost(self):
-        return self.price * self.quantity

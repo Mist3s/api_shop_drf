@@ -8,6 +8,19 @@ MIN_WEIGHT_PACKING = 1
 MAX_WEIGHT_PACKING = 99999
 
 
+class ProductQuerySet(models.QuerySet):
+    """QuerySet for model products."""
+    def with_favorite_status(self, user):
+        return self.annotate(
+            is_favorite=models.Exists(
+                Favorite.objects.filter(
+                    product=models.OuterRef('pk'),
+                    user=user
+                )
+            )
+        )
+
+
 class PublishedBaseModel(models.Model):
     """Абстрактная модель.
     Добавляет флаг available и created/updated."""
@@ -98,6 +111,9 @@ class Product(PublishedBaseModel):
         related_name='product',
         verbose_name='Упаковка',
     )
+    object = models.Manager.from_queryset(
+        ProductQuerySet
+    )()
 
     class Meta:
         ordering = ['name']

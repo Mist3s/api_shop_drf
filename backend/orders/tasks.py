@@ -25,4 +25,3 @@ def order_created(order_id):
     )
     logger.info(f'Mail sent: {mail_sent}')
     return mail_sent
-

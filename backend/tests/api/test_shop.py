@@ -50,10 +50,12 @@ def test_add_product_auth_client(client, product_data):
     ),
 )
 def test_categories_get_detail(client, create_category):
+    fields_quantity = 2
     url = f'/api/categories/{create_category.slug}/'
     response = client.get(url)
     assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.data, dict)
+    assert len(response.data) == fields_quantity
     assert response.data.get('name') == create_category.name
     assert response.data.get('slug') == create_category.slug
     assert type(response.data.get('slug')) == str
@@ -102,11 +104,12 @@ def test_categories_method_not_available(
     ),
 )
 def test_packing_get_list(client, create_packing):
+    fields_objects = 1
     url = '/api/packing/'
     response = client.get(url)
     assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.data, list)
-    assert len(response.data) == 1
+    assert len(response.data) == fields_objects
 
 
 @pytest.mark.django_db

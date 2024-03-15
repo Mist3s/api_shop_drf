@@ -111,7 +111,7 @@ class Product(PublishedBaseModel):
         related_name='product',
         verbose_name='Упаковка',
     )
-    object = models.Manager.from_queryset(
+    objects = models.Manager.from_queryset(
         ProductQuerySet
     )()
 

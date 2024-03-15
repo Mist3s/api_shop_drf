@@ -3,7 +3,8 @@ from django.utils.safestring import mark_safe
 
 from .models import (
     Category, Product, Packing,
-    ProductPacking, ProductImage
+    ProductPacking, ProductImage,
+    Favorite
 )
 
 
@@ -48,3 +49,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Packing)
 class PackagingAdmin(admin.ModelAdmin):
     list_display = ['name', 'weight']
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ['product', 'user']

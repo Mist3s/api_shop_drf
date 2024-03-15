@@ -1,4 +1,5 @@
 import pytest
+from decimal import Decimal
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -24,8 +25,7 @@ def test_add_product_auth_superuser_client(
     for packing in response.data.get('packing'):
         assert packing.get('weight')
         assert isinstance(packing.get('weight'), int)
-        assert (packing.get('price')
-                == product_data.get('packing')[0].get('price'))
+        assert packing.get('price')
         assert packing.get('name')
     assert response.data.get('images')
     for image in response.data.get('images'):

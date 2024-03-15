@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.urls import reverse
 
+from users.models import User
+
 MIN_WEIGHT_PACKING = 1
 MAX_WEIGHT_PACKING = 99999
 
@@ -207,4 +209,26 @@ class ProductPacking(PublishedBaseModel):
         constraints = [models.UniqueConstraint(
             fields=['product', 'packing'],
             name='unique_product_packing'
+        )]
+
+
+class Favorite(models.Model):
+    """Модель избранного."""
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorite_products'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='favorite_products'
+    )
+
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные'
+        constraints = [models.UniqueConstraint(
+            fields=['user', 'product'],
+            name='unique_favorites'
         )]

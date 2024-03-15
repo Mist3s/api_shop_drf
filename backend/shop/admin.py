@@ -48,6 +48,3 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Packing)
 class PackagingAdmin(admin.ModelAdmin):
     list_display = ['name', 'weight']
-
-
-

@@ -3,7 +3,7 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from shop.models import Category, Packing
+from shop.models import Product, Category, Packing
 
 
 @pytest.mark.django_db
@@ -36,18 +36,60 @@ def test_add_product_auth_superuser_client(
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
+    'method, expected_status, data',
+    (
+        ('put', status.HTTP_401_UNAUTHORIZED,
+         pytest.lazy_fixture('product_data')),
+        ('put', status.HTTP_401_UNAUTHORIZED,
+         pytest.lazy_fixture('product_data')),
+        ('patch', status.HTTP_401_UNAUTHORIZED,
+         pytest.lazy_fixture('product_data')),
+        ('delete', status.HTTP_401_UNAUTHORIZED,
+         None)
+    )
+)
+@pytest.mark.parametrize(
     'client',
     (
         pytest.lazy_fixture('no_auth_client'),
         pytest.lazy_fixture('auth_client')
     ),
 )
-def test_add_product_auth_client(
-        client: APIClient, product_data: dict[str, list[dict], int, bool]
+def test_add_product_auth_and_no_auth_client(
+        client: APIClient, product_data: dict[str, list[dict], int, bool],
+        method: str, expected_status: status, data: dict | None
 ) -> None:
     """Анонимные и авторизованные пользователи не могут добавить продукт."""
-    response = client.post('/api/products/', product_data, format='json')
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    response = getattr(client, method)('/api/products/', product_data, format='json')
+    assert response.status_code == expected_status
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'product, detail',
+    (
+        (pytest.lazy_fixture('create_product'), False),
+        (pytest.lazy_fixture('create_product'), True),
+    ),
+)
+@pytest.mark.parametrize(
+    'client',
+    (
+        pytest.lazy_fixture('no_auth_client'),
+        pytest.lazy_fixture('auth_client'),
+        pytest.lazy_fixture('auth_superuser_client')
+    ),
+)
+def test_get_product_auth_and_no_auth_client(
+        client: APIClient, product_data: dict[str, list[dict], int, bool],
+        product: Product, detail: bool
+) -> None:
+    """Проверка гет запроса продуктов."""
+    url = '/api/products/'
+    if detail:
+        url += f'{product.data.get("slug")}/'
+    response = client.get(url, product_data, format='json')
+    assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
@@ -99,7 +141,7 @@ def test_categories_get_detail(
 )
 def test_categories_method_not_available(
         client: APIClient, method: str, expected_status: status,
-        data: dict, detail: bool, create_category: Category
+        data: dict | None, detail: bool, create_category: Category
 ) -> None:
     """Не безопасные методы для категории: отключены."""
     url = '/api/categories/'
@@ -179,7 +221,7 @@ def test_packing_get_detail(
 )
 def test_packing_method_not_available(
         client: Packing, method: str, expected_status: status,
-        data: dict, detail: bool, create_packing: Packing
+        data: dict | None, detail: bool, create_packing: Packing
 ) -> None:
     """Не безопасные методы для упаковки: отключены."""
     url = '/api/packing/'

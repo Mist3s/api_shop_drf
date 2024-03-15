@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 
-from shop.models import Packing, Category
+from shop.models import Product, Packing, Category
 from users.models import User
 
 
@@ -85,6 +85,11 @@ def product_data(image_data, create_packing, create_category):
         packing=[dict(id=create_packing.pk, price=100),],
         images=[image_data,]
     )
+
+
+@pytest.fixture
+def create_product(auth_superuser_client, product_data):
+    return auth_superuser_client.post('/api/products/', product_data, format='json')
 
 
 @pytest.fixture

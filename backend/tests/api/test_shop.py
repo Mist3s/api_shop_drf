@@ -42,29 +42,54 @@ def test_add_product_auth_client(client, product_data):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    'method, expected_status, data, detail, text',
+    'client',
     (
-        ('post', status.HTTP_405_METHOD_NOT_ALLOWED,
-         pytest.lazy_fixture('category_data'), False, 'Create category: Enabled.'),
-        ('get', status.HTTP_200_OK, None, False, 'List categories: Disabled.'),
-        ('get', status.HTTP_200_OK, None, True, 'Detailed information about category: Disabled.'),
-        ('put', status.HTTP_405_METHOD_NOT_ALLOWED,
-         pytest.lazy_fixture('category_data'), True, 'Update information about category: Enabled.'),
-        ('patch', status.HTTP_405_METHOD_NOT_ALLOWED,
-         pytest.lazy_fixture('category_data'), True, 'Update partial category information: Enabled.'),
-        ('delete', status.HTTP_405_METHOD_NOT_ALLOWED, None, True, 'Delete category: Enabled.')
+            pytest.lazy_fixture('no_auth_client'),
+            pytest.lazy_fixture('auth_client'),
+            pytest.lazy_fixture('auth_superuser_client')
     ),
 )
-def test_category(method, auth_client, expected_status, data, create_category, detail, text):
-    url = '/api/categories/'
+def test_categories_get_detail(client, create_category):
+    url = f'/api/categories/{create_category.slug}/'
+    response = client.get(url)
+    assert response.status_code == status.HTTP_200_OK
+    assert isinstance(response.data, dict)
+    assert response.data.get('name') == create_category.name
+    assert response.data.get('slug') == create_category.slug
+    assert type(response.data.get('slug')) == str
+    assert type(response.data.get('name')) == str
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    'method, expected_status, data, detail',
+    (
+        ('post', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('category_data'), False),
+        ('put', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('category_data'), True),
+        ('patch', status.HTTP_405_METHOD_NOT_ALLOWED,
+         pytest.lazy_fixture('category_data'), True),
+        ('delete', status.HTTP_405_METHOD_NOT_ALLOWED,
+         None, True)
+    )
+)
+@pytest.mark.parametrize(
+    'client',
+    (
+            pytest.lazy_fixture('no_auth_client'),
+            pytest.lazy_fixture('auth_client'),
+            pytest.lazy_fixture('auth_superuser_client')
+    ),
+)
+def test_categories_method_not_available(
+        client, method, expected_status, data, detail, create_category
+):
+    url = f'/api/categories/'
     if detail:
         url += f'{create_category.slug}/'
-    response = getattr(auth_client, method)('/api/categories/', data)
-    assert response.status_code == expected_status, text
-    if response.request.get('REQUEST_METHOD') == 'GET':
-        assert isinstance(response.data, list), 'Expected list.'
-        assert response.data[0].get('slug') == create_category.slug, 'Missing field "slug".'
-        assert response.data[0].get('name') == create_category.name, 'Missing field "name".'
+    response = getattr(client, method)(url, data, format='json')
+    assert response.status_code == expected_status
 
 
 @pytest.mark.django_db

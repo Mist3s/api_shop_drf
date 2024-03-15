@@ -1,4 +1,6 @@
+"""Settings celery."""
 import os
+
 from celery import Celery
 
 os.environ.setdefault(
@@ -15,4 +17,5 @@ app.autodiscover_tasks()
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
+    """Debug task."""
     print(f'Request: {self.request!r}')

@@ -109,7 +109,9 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 )
 class ProductViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели продуктов"""
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().select_related(
+        'category'
+    )
     serializer_class = ProductSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (IsAuthenticatedOrReadOnly, IsAdminUser)

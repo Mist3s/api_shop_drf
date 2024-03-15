@@ -1,14 +1,16 @@
 import pytest
+
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from shop.models import Packing, Category
+from shop.models import Category, Packing
 
 
 @pytest.mark.django_db
 def test_add_product_auth_superuser_client(
         auth_superuser_client: APIClient, product_data: dict
 ) -> None:
+    """Проверка создания продукта и содержания ответа."""
     response = auth_superuser_client.post(
         '/api/products/', product_data, format='json'
     )
@@ -44,6 +46,7 @@ def test_add_product_auth_superuser_client(
 def test_add_product_auth_client(
         client: APIClient, product_data: dict[str, list[dict], int, bool]
 ) -> None:
+    """Анонимные и авторизованные пользователи не могут добавить продукт."""
     response = client.post('/api/products/', product_data, format='json')
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -99,6 +102,7 @@ def test_categories_method_not_available(
         client: APIClient, method: str, expected_status: status,
         data: dict, detail: bool, create_category: Category
 ) -> None:
+    """Не безопасные методы для категории: отключены."""
     url = '/api/categories/'
     if detail:
         url += f'{create_category.slug}/'
@@ -118,6 +122,7 @@ def test_categories_method_not_available(
 def test_packing_get_list(
         client: APIClient, create_packing: Packing
 ) -> None:
+    """Проверка листа упаковок."""
     fields_objects = 1
     url = '/api/packing/'
     response = client.get(url)
@@ -138,6 +143,7 @@ def test_packing_get_list(
 def test_packing_get_detail(
         client: APIClient, create_packing: Packing
 ) -> None:
+    """Проверка детальной информации упаковки."""
     url = f'/api/packing/{create_packing.pk}/'
     response = client.get(url)
     assert response.status_code == status.HTTP_200_OK
@@ -176,6 +182,7 @@ def test_packing_method_not_available(
         client: Packing, method: str, expected_status: status,
         data: dict, detail: bool, create_packing: Packing
 ) -> None:
+    """Не безопасные методы для упаковки: отключены."""
     url = '/api/packing/'
     if detail:
         url += f'{create_packing.pk}/'

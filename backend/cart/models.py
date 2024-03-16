@@ -44,3 +44,6 @@ class Cart(models.Model):
             fields=['user', 'product'],
             name='unique_product_user_cart'
         )]
+
+    def __str__(self):
+        return f'{self.user} / {self.product} - {self.quantity}'

@@ -1,10 +1,11 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample
+from django.db.models import Prefetch
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiExample, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework import status
 
 from .serializers import CategorySerializer, ProductSerializer, PackingSerializer, ProductGetSerializer
-from shop.models import Category, Product, Packing
+from shop.models import Category, Product, Packing, ProductPacking
 
 
 @extend_schema_view(
@@ -86,21 +87,21 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
         description="Страница доступна администратору.",
         responses={
             status.HTTP_201_CREATED: ProductGetSerializer
-        }
+        },
     ),
     retrieve=extend_schema(
         summary="Получить продукт",
         description="Страница доступна всем пользователям.",
         responses={
             status.HTTP_200_OK: ProductGetSerializer
-        }
+        },
     ),
     partial_update=extend_schema(
         summary="Обновить продукт",
         description="Страница доступна администратору.",
         responses={
             status.HTTP_200_OK: ProductGetSerializer
-        }
+        },
     ),
     destroy=extend_schema(
         summary="Удалить продукт",
@@ -111,7 +112,24 @@ class ProductViewSet(viewsets.ModelViewSet):
     """Вьюсет для модели продуктов"""
     queryset = Product.objects.all().select_related(
         'category'
+    ).prefetch_related(
+        'product_images',
+        Prefetch(
+            'product_packing',
+            queryset=ProductPacking.objects.select_related(
+                'packing'
+            ),
+            to_attr='packing'
+        )
     )
     serializer_class = ProductSerializer
     http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (IsAuthenticatedOrReadOnly, IsAdminUser)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.request.user.is_authenticated:
+            queryset = queryset.with_favorite_status(
+                self.request.user
+            )
+        return queryset

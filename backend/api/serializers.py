@@ -71,17 +71,22 @@ class ProductGetSerializer(serializers.ModelSerializer):
     """Serializer продукта для вывода данных."""
     packing = ProductPackingSerializer(
         source='product_packing',
-        many=True
+        many=True,
+        read_only=True
     )
     images = ProductImageSerializer(
         source='product_images',
         many=True
+    )
+    is_favorite = serializers.BooleanField(
+        read_only=True,
     )
 
     class Meta:
         model = Product
         fields = (
             'available',
+            'is_favorite',
             'name',
             'slug',
             'category',

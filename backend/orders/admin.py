@@ -13,8 +13,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     """Регистрация модели заказа в админке."""
     list_display = [
-        'id', 'first_name', 'last_name', 'email',
-        'address', 'postal_code', 'city', 'paid',
+        'id', 'user', 'address', 'paid',
         'created', 'update'
     ]
     list_filter = ['paid', 'created', 'update']

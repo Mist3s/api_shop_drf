@@ -34,6 +34,10 @@ class Address(models.Model):
         help_text='Укажите номер квартиры.'
     )
 
+    def __str__(self):
+        return (f'{self.region}, {self.city}, '
+                f'{self.street}, {self.house}, {self.room}')
+
 
 class Order(models.Model):
     """Модель заказа."""

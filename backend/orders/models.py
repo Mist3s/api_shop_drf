@@ -2,44 +2,52 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from shop.models import ProductPacking
+from users.models import User
 
 MAX_QUANTITY_PRODUCT_AT_ORDER = 1000
 MIN_QUANTITY_PRODUCT_AT_ORDER = 1
 
 
-class Order(models.Model):
-    """Модель заказа."""
-    first_name = models.CharField(
-        max_length=50,
-        verbose_name='Имя',
-        help_text='Ваше имя.'
-    )
-    last_name = models.CharField(
-        max_length=50,
-        verbose_name='Фамилия',
-        help_text='Ваша фамилия.'
-    )
-    email = models.EmailField(
-        verbose_name='Email',
-        help_text='Ваш email адрес.'
-    )
-    address = models.CharField(
-        max_length=250,
-        verbose_name='Адрес',
-        help_text='Ведите адрес доставки.\n'
-                  'Пример:\n'
-                  'ул. Пушкина, д. 1, кв. 2'
-    )
-    postal_code = models.CharField(
-        max_length=6,
-        verbose_name='Почтовый индекс',
-        help_text='Укажите ваш почтовый индекс.\n'
-                  'Пример: 236238'
+class Address(models.Model):
+    region = models.CharField(
+        max_length=150,
+        verbose_name='Регион (область, край)',
+        help_text='Укажите регион.'
     )
     city = models.CharField(
         max_length=100,
         verbose_name='Город',
         help_text='Укажите город доставки.'
+    )
+    street = models.CharField(
+        max_length=150,
+        verbose_name='Улица',
+        help_text='Укажите улицу.'
+    )
+    house = models.CharField(
+        max_length=30,
+        verbose_name='Номер дома',
+        help_text='Укажите номер дома.'
+    )
+    room = models.IntegerField(
+        verbose_name='Номер квартиры',
+        help_text='Укажите номер квартиры.'
+    )
+
+
+class Order(models.Model):
+    """Модель заказа."""
+    address = models.ForeignKey(
+        Address,
+        related_name='order_address',
+        on_delete=models.CASCADE,
+        verbose_name='Адрес доставки.'
+    )
+    user = models.ForeignKey(
+        User,
+        related_name='order_user',
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
     )
     created = models.DateTimeField(
         auto_now_add=True,

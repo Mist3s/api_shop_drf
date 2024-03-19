@@ -60,6 +60,17 @@ class OrderStatus(models.Model):
         primary_key=True
     )
 
+    class Meta:
+        ordering = ['slug']
+        indexes = [
+            models.Index(fields=['slug'])
+        ]
+        verbose_name = 'Статус заказа'
+        verbose_name_plural = 'Статусы заказа'
+
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
     """Модель заказа."""

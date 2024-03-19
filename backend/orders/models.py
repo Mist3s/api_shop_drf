@@ -47,6 +47,20 @@ class Address(models.Model):
                 f'{self.street}, {self.house}, {self.room}')
 
 
+class OrderStatus(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Название',
+        help_text='Укажите название статуса заказа.'
+    )
+    slug = models.SlugField(
+        max_length=100,
+        verbose_name='Slug',
+        help_text='Укажите slug статуса заказа.',
+        primary_key=True
+    )
+
+
 class Order(models.Model):
     """Модель заказа."""
     address = models.ForeignKey(
@@ -70,6 +84,12 @@ class Order(models.Model):
         auto_now=True,
         verbose_name='Обновлено',
         help_text='Дата последнего обновления.'
+    )
+    status = models.ForeignKey(
+        OrderStatus,
+        related_name='order_status',
+        on_delete=models.CASCADE,
+        verbose_name='Статуса заказа'
     )
     paid = models.BooleanField(
         default=False,

@@ -34,6 +34,14 @@ class Address(models.Model):
         help_text='Укажите номер квартиры.'
     )
 
+    class Meta:
+        ordering = ['-id']
+        indexes = [
+            models.Index(fields=['-id'])
+        ]
+        verbose_name = 'Адрес'
+        verbose_name_plural = 'Адреса'
+
     def __str__(self):
         return (f'{self.region}, {self.city}, '
                 f'{self.street}, {self.house}, {self.room}')

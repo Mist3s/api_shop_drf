@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem, Address
+from .models import Order, OrderItem, Address, OrderStatus, DeliveryMethod
 
 
 class OrderItemInline(admin.TabularInline):
@@ -16,6 +16,24 @@ class AddressAdmin(admin.ModelAdmin):
         'id', 'region', 'city', 'street',
         'house', 'room'
     ]
+
+
+@admin.register(OrderStatus)
+class OrderStatusAdmin(admin.ModelAdmin):
+    """Регистрация модели статуса заказа в админке."""
+    list_display = [
+        'name', 'slug'
+    ]
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(DeliveryMethod)
+class DeliveryMethodAdmin(admin.ModelAdmin):
+    """Регистрация модели способа доставки в админке."""
+    list_display = [
+        'name', 'slug', 'description'
+    ]
+    prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Order)

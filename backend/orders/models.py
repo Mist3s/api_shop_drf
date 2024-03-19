@@ -132,6 +132,12 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Статуса заказа'
     )
+    delivery = models.ForeignKey(
+        DeliveryMethod,
+        related_name='order_delivery',
+        on_delete=models.CASCADE,
+        verbose_name='Способ доставки'
+    )
     paid = models.BooleanField(
         default=False,
         verbose_name='Статус оплаты'

@@ -72,6 +72,36 @@ class OrderStatus(models.Model):
         return self.name
 
 
+class DeliveryMethod(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Название',
+        help_text='Укажите название способа доставки.'
+    )
+    slug = models.SlugField(
+        max_length=100,
+        verbose_name='Slug',
+        help_text='Укажите slug способа доставки.',
+        primary_key=True
+    )
+    description = models.TextField(
+        max_length=500,
+        verbose_name='Описание',
+        help_text='Укажите описание способа доставки.'
+    )
+
+    class Meta:
+        ordering = ['slug']
+        indexes = [
+            models.Index(fields=['slug'])
+        ]
+        verbose_name = 'Способ доставки'
+        verbose_name_plural = 'Способы доставки'
+
+    def __str__(self):
+        return self.name
+
+
 class Order(models.Model):
     """Модель заказа."""
     address = models.ForeignKey(

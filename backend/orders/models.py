@@ -8,7 +8,7 @@ MAX_QUANTITY_PRODUCT_AT_ORDER = 1000
 MIN_QUANTITY_PRODUCT_AT_ORDER = 1
 
 
-class Address(models.Model):
+class DeliveryAddress(models.Model):
     region = models.CharField(
         max_length=150,
         verbose_name='Регион (область, край)',
@@ -47,10 +47,65 @@ class Address(models.Model):
                 f'{self.street}, {self.house}, {self.room}')
 
 
+class OrderStatus(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Название',
+        help_text='Укажите название статуса заказа.'
+    )
+    slug = models.SlugField(
+        max_length=100,
+        verbose_name='Slug',
+        help_text='Укажите slug статуса заказа.',
+        primary_key=True
+    )
+
+    class Meta:
+        ordering = ['slug']
+        indexes = [
+            models.Index(fields=['slug'])
+        ]
+        verbose_name = 'Статус заказа'
+        verbose_name_plural = 'Статусы заказа'
+
+    def __str__(self):
+        return self.name
+
+
+class DeliveryMethod(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name='Название',
+        help_text='Укажите название способа доставки.'
+    )
+    slug = models.SlugField(
+        max_length=100,
+        verbose_name='Slug',
+        help_text='Укажите slug способа доставки.',
+        primary_key=True
+    )
+    description = models.TextField(
+        max_length=500,
+        verbose_name='Описание',
+        help_text='Укажите описание способа доставки.'
+    )
+
+    class Meta:
+        ordering = ['slug']
+        indexes = [
+            models.Index(fields=['slug'])
+        ]
+        verbose_name = 'Способ доставки'
+        verbose_name_plural = 'Способы доставки'
+
+    def __str__(self):
+        return self.name
+
+
 class Order(models.Model):
     """Модель заказа."""
     address = models.ForeignKey(
-        Address,
+        DeliveryAddress,
         related_name='order_address',
         on_delete=models.CASCADE,
         verbose_name='Адрес доставки.'
@@ -70,6 +125,18 @@ class Order(models.Model):
         auto_now=True,
         verbose_name='Обновлено',
         help_text='Дата последнего обновления.'
+    )
+    status = models.ForeignKey(
+        OrderStatus,
+        related_name='order_status',
+        on_delete=models.CASCADE,
+        verbose_name='Статуса заказа'
+    )
+    delivery = models.ForeignKey(
+        DeliveryMethod,
+        related_name='order_delivery',
+        on_delete=models.CASCADE,
+        verbose_name='Способ доставки'
     )
     paid = models.BooleanField(
         default=False,

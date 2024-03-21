@@ -8,7 +8,7 @@ MAX_QUANTITY_PRODUCT_AT_ORDER = 1000
 MIN_QUANTITY_PRODUCT_AT_ORDER = 1
 
 
-class Address(models.Model):
+class DeliveryAddress(models.Model):
     region = models.CharField(
         max_length=150,
         verbose_name='Регион (область, край)',
@@ -105,7 +105,7 @@ class DeliveryMethod(models.Model):
 class Order(models.Model):
     """Модель заказа."""
     address = models.ForeignKey(
-        Address,
+        DeliveryAddress,
         related_name='order_address',
         on_delete=models.CASCADE,
         verbose_name='Адрес доставки.'
